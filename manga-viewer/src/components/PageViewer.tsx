@@ -4,9 +4,19 @@ import { Page } from "../types";
 
 interface PageViewerProps {
     chapterId: number;
+    onNextChapter: () => void;
+    onPreviousChapter: () => void;
+    isLastChapter: boolean;
+    isFirstChapter: boolean;
 }
 
-const PageViewer: React.FC<PageViewerProps> = ({ chapterId }) => {
+const PageViewer: React.FC<PageViewerProps> = ({
+    chapterId,
+    onNextChapter,
+    onPreviousChapter,
+    isLastChapter,
+    isFirstChapter
+}) => {
     const [pages, setPages] = useState<Page[]>([]);
     const [currentPage, setCurrentPage] = useState<number>(0);
 
@@ -23,11 +33,17 @@ const PageViewer: React.FC<PageViewerProps> = ({ chapterId }) => {
         if (currentPage < pages.length - 1) {
             setCurrentPage(currentPage + 1);
         }
+        else if (!isLastChapter) {
+            onNextChapter(); // Move to the next chapter if it's not the last chapter
+        }
     };
 
     const goToPreviousPage = () => {
         if (currentPage > 0) {
             setCurrentPage(currentPage - 1);
+        }
+        else if (!isFirstChapter) {
+            onPreviousChapter(); // Move to the previous chapter if it's not the first chapter
         }
     };
 
